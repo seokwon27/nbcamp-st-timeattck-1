@@ -57,7 +57,7 @@ function App() {
     }
     setMedals([...medals, newMedal]);
     inputReset();
-    alert("국가추가 완료");
+    alert("추가 완료");
   };
 
   //업데이트 버튼
@@ -90,14 +90,14 @@ function App() {
     inputReset();
   };
 
-  //삭제버튼 분리를 왜 못하니....
-  // const deletMedalHandler = (e) => {
-  //   e.preventDefault();
-  //   const deletedMedal = () => {
-
-  //   }
-  //   setMedals(medals.filter((id) => id === ));
-  // };
+  //삭제버튼
+  const deletMedalHandler = (id) => {
+    const deletedMedal = medals.filter((medal) => medal.id !== id);
+    const result = confirm("삭제하시겠습니까?");
+    if (result) {
+      setMedals(deletedMedal);
+    }
+  };
 
   return (
     <>
@@ -129,32 +129,24 @@ function App() {
                 <th>액션</th>
               </tr>
             </thead>
-            <tbody>
-              {medals
-                .sort((a, b) => b.gold - a.gold || b.silver - a.silver || b.bronze - a.bronze)
-                .map((medal) => {
-                  return (
-                    <tr key={medal.id}>
-                      <td>{medal.country}</td>
-                      <td>{medal.gold}</td>
-                      <td>{medal.silver}</td>
-                      <td>{medal.bronze}</td>
+            {medals
+              .sort((a, b) => b.gold - a.gold || b.silver - a.silver || b.bronze - a.bronze)
+              .map((medal) => {
+                const { id, country, gold, silver, bronze } = medal;
+                return (
+                  <tbody key={id}>
+                    <tr>
+                      <td>{country}</td>
+                      <td>{gold}</td>
+                      <td>{silver}</td>
+                      <td>{bronze}</td>
                       <td>
-                        <button
-                          onClick={() => {
-                            const result = confirm("삭제하시겠습니까?");
-                            const id = medal.id;
-                            if (result) setMedals(medals.filter((medal) => medal.id !== id));
-                            console.log(medals);
-                          }}
-                        >
-                          삭제
-                        </button>
+                        <button onClick={() => deletMedalHandler(id)}>삭제</button>
                       </td>
                     </tr>
-                  );
-                })}
-            </tbody>
+                  </tbody>
+                );
+              })}
           </table>
         )}
       </div>
