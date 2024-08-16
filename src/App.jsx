@@ -18,15 +18,15 @@ function App() {
     setCountry(e.target.value);
   };
   const inputGoldHandler = (e) => {
-    setGold(e.target.value);
+    setGold(+e.target.value);
   };
 
   const inputSilveryHandler = (e) => {
-    setSilver(e.target.value);
+    setSilver(+e.target.value);
   };
 
   const inputBronzeHandler = (e) => {
-    setBronze(e.target.value);
+    setBronze(+e.target.value);
   };
 
   // 인풋 초기화
@@ -70,26 +70,32 @@ function App() {
       alert("국가명을 입력해주세요.");
       return;
     }
-    setMedals(
-      medals.map((medal) => {
-        if (medal.country === country) {
-          return {
-            ...medal,
-            gold: gold,
-            silver: silver,
-            bronze: bronze,
-          };
-        } else {
-          return medal;
-        }
-      })
-    );
-    alert("업데이트 완료");
+    if (medals.some((medal) => medal.country === country)) {
+      setMedals(
+        medals.map((medal) => {
+          if (medal.country === country) {
+            return {
+              ...medal,
+              gold: gold,
+              silver: silver,
+              bronze: bronze,
+            };
+          } else {
+            return medal;
+          }
+        })
+      );
+      alert("업데이트 완료");
+    } else {
+      alert("존재하지 않는 국가명입니다. 추가 먼저 해주세요");
+    }
+    inputReset();
   };
 
   //삭제버튼
   const deletMedalHandler = (e) => {
     e.preventDefault();
+    setMedals(medals.filter((medal) => medal.id !== id));
   };
 
   return (
@@ -123,19 +129,21 @@ function App() {
               </tr>
             </thead>
             <tbody>
-              {medals.map((medal) => {
-                return (
-                  <tr>
-                    <td>{medal.country}</td>
-                    <td>{medal.gold}</td>
-                    <td>{medal.silver}</td>
-                    <td>{medal.bronze}</td>
-                    <td>
-                      <button>삭제</button>
-                    </td>
-                  </tr>
-                );
-              })}
+              {medals
+                .sort((a, b) => b.gold - a.gold || b.silver - a.silver || b.bronze - a.bronze)
+                .map((medal) => {
+                  return (
+                    <tr key={medal.id}>
+                      <td>{medal.country}</td>
+                      <td>{medal.gold}</td>
+                      <td>{medal.silver}</td>
+                      <td>{medal.bronze}</td>
+                      <td>
+                        <button onClick={deletMedalHandler}>삭제</button>
+                      </td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
         )}
