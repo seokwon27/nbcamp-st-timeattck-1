@@ -12,7 +12,6 @@ function App() {
   const [bronze, setBronze] = useState("0");
 
   //인풋핸들러
-  console.log("country : ", country, "gold : ", gold, "silver : ", silver, "bronze : ", bronze);
 
   const inputCountryHandler = (e) => {
     setCountry(e.target.value);
@@ -57,7 +56,6 @@ function App() {
       return;
     }
     setMedals([...medals, newMedal]);
-    console.log(medals);
     inputReset();
     alert("국가추가 완료");
   };
@@ -92,11 +90,14 @@ function App() {
     inputReset();
   };
 
-  //삭제버튼
-  const deletMedalHandler = (e) => {
-    e.preventDefault();
-    setMedals(medals.filter((medal) => medal.id !== id));
-  };
+  //삭제버튼 분리를 왜 못하니....
+  // const deletMedalHandler = (e) => {
+  //   e.preventDefault();
+  //   const deletedMedal = () => {
+
+  //   }
+  //   setMedals(medals.filter((id) => id === ));
+  // };
 
   return (
     <>
@@ -139,7 +140,16 @@ function App() {
                       <td>{medal.silver}</td>
                       <td>{medal.bronze}</td>
                       <td>
-                        <button onClick={deletMedalHandler}>삭제</button>
+                        <button
+                          onClick={() => {
+                            const result = confirm("삭제하시겠습니까?");
+                            const id = medal.id;
+                            if (result) setMedals(medals.filter((medal) => medal.id !== id));
+                            console.log(medals);
+                          }}
+                        >
+                          삭제
+                        </button>
                       </td>
                     </tr>
                   );
